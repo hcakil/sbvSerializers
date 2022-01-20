@@ -6,7 +6,74 @@ from rest_framework import status
 from rest_framework.views import APIView
 from django.http import Http404
 
+from rest_framework import generics,mixins
+from rest_framework import viewsets
 
+#Generic Views
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+
+
+
+
+
+
+#Generics Used Views
+#In here no need to pk values but still 2 method for <int:pk> part
+"""
+class StudentList(generics.ListCreateAPIView,):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+"""
+
+#Mixin Edited Part
+#Mixin lowers the line of code number
+
+"""
+
+
+
+class StudentList (mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+    def get(self,request):
+        return self.list(request)
+
+    def post(self,request):
+        return self.create(request)
+
+class StudentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,generics.GenericAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+    def get(self,request,pk):
+        return self.retrieve(request, pk)
+
+    def put(self,request,pk):
+        return self.update(request, pk)
+
+    def delete(self,request, pk):
+        return  self.destroy(request, pk)
+
+"""
+
+
+
+#Only Class Based Serialization Section
+#long code for basic class based serializations
+"""
 # Create your views here.
 
 class StudentList(APIView):
@@ -44,7 +111,7 @@ class StudentDetail(APIView):
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+"""
 
 
 
